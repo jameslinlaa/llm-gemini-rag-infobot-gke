@@ -1,0 +1,10 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: streamlit-ingress
+spec:
+  defaultBackend:
+    service:
+      name: streamlit
+      port:
+        number: 8080

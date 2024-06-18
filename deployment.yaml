@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: streamlit-deployment
+  labels:
+    app: streamlit
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: streamlit
+  template:
+    metadata:
+      labels:
+        app: streamlit
+    spec:
+      containers:
+        - name: streamlit
+          image: asia-east1-docker.pkg.dev/PROJECT_ID/mongodb/streamlit-gemma:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /_stcore/health
+              port: 8080
+              scheme: HTTP
+            timeoutSeconds: 1
+          readinessProbe:
+            httpGet:
+              path: /_stcore/health
+              port: 8080
+              scheme: HTTP
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 1
+              memory: 2Gi
+            requests:
+              cpu: 100m
+              memory: 745Mi
+      serviceAccountName: readonly-sa
